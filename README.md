@@ -1,5 +1,5 @@
 # Devops na Google Cloud
-
+ 
   Este projeto consiste em realizar provisionamento de um servidor Ubuntu 22.04 LTS e hospedá-lo no na Google Cloud, juntamente com na criação de uma VPN e um bucket para armazenar o estado da infraestrutura; Utilizando CI-CD do gitlab para a pipeline e infra-as-code com o terraform, com diversas ferramentas e configurações na melhor prática possível segundo as recomendações da GCP com segurança, provisionadas totalmente por código.
 
 ## Tecnologias utilizadas
