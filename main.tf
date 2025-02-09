@@ -1,23 +1,23 @@
 provider "google" {
-  credentials = file("~/.gcp/credentials.json")
-  project     = "website-portifolio"
-  region      = "us-west1"
+  credentials = local.credentials
+  project     = var.project_name
+  region      = var.region
 }
 
-resource "google_compute_network" "vpc_network" {
-  name                    = "cd-vpc"
+resource "google_compute_network" "vpc" {
+  name                    = "vpc"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name          = "cd-subnet"
-  ip_cidr_range = "10.0.0.0/24"
-  network       = google_compute_network.vpc_network.self_link
+  name          = "subnet"
+  ip_cidr_range = var.ip_cidr_range
+  network       = google_compute_network.vpc.self_link
 }
 
-resource "google_compute_firewall" "default-allow-http-https-ssh-icmp" {
-  name        = "cd-allow-http-https-ssh-icmp"
-  network     = google_compute_network.vpc_network.self_link
+resource "google_compute_firewall" "frule-allow-http-https-ssh-icmp" {
+  name    = "frule-allow-http-https-ssh-icmp"
+  network = google_compute_network.vpc.self_link
 
   allow {
     protocol = "icmp"
@@ -31,11 +31,13 @@ resource "google_compute_firewall" "default-allow-http-https-ssh-icmp" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_instance" "inst-website-portifolio" {
-  zone = "us-west1-a"
+resource "google_compute_instance" "instance" {
+  zone = var.zone
+  name = var.instance_name
+
   boot_disk {
     auto_delete = true
-    device_name = "inst-website-portifolio"
+    device_name = "instance-boot-disk"
 
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-2404-noble-amd64-v20241219"
@@ -51,22 +53,19 @@ resource "google_compute_instance" "inst-website-portifolio" {
   enable_display      = false
 
   labels = {
-    goog-ec-src = "vm_add-tf"
+    goog-ec-src = "vm-add-from-tf"
   }
 
   machine_type = "e2-micro"
-  name         = "inst-website-portifolio"
 
   metadata = {
     ssh-keys = local.formatted_key
   }
 
-  metadata_startup_script = templatefile("${path.module}/startup-files/startup-script.sh", {
-    address = "valor_do_giropops"
-  })
+  metadata_startup_script = local.startup_script_path
 
   network_interface {
-    network    = google_compute_network.vpc_network.self_link
+    network    = google_compute_network.vpc.self_link
     subnetwork = google_compute_subnetwork.subnet.self_link
     access_config {
     }

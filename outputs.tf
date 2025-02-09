@@ -1,3 +1,9 @@
 output "instance_public_ip" {
-  value       = google_compute_instance.inst-website-portifolio.network_interface.0.access_config.0.nat_ip
+  description = "Instance public IP"
+  value = google_compute_instance.instance.network_interface.0.access_config.0.nat_ip
+}
+
+output "ssh_key_path" {
+  description = "ssh key path:"
+  value = local.ssh_public_key
 }
