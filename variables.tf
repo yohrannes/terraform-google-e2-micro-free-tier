@@ -36,11 +36,11 @@ variable "ip_cidr_range" {
 variable "region" {
   type        = string
   description = "Region name"
-  default = "us-west1" 
+  default = "us-east1"
 }
 
 variable "zone" {
   type        = string
   description = "Zone name"
-  default = "us-west1-a"
+  default = "us-east1-a"
 }
