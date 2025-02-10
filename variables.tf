@@ -42,5 +42,5 @@ variable "region" {
 variable "zone" {
   type        = string
   description = "Zone name"
-  default = "us-east1-a"
+  default = "us-east1-b"
 }
