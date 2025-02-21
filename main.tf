@@ -32,8 +32,9 @@ resource "google_compute_firewall" "frule-allow-http-https-ssh-icmp" {
 }
 
 resource "google_compute_instance" "instance" {
-  zone = var.zone
-  name = var.instance_name
+  zone  = var.zone
+  name  = var.instance_name
+  count = var.web_instance_count
 
   boot_disk {
     auto_delete = true
@@ -86,5 +87,6 @@ resource "google_compute_instance" "instance" {
     enable_secure_boot          = false
     enable_vtpm                 = true
   }
+
 }
 
