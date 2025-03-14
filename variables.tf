@@ -5,9 +5,9 @@ locals {
   startup_script_path = templatefile("${path.module}/startup-files/startup-script.sh", {})
 }
 
-variable "project_name" {
+variable "project_id" {
   type        = string
-  description = "Project name"
+  description = "Project id"
 }
 
 variable "credentials_path" {
