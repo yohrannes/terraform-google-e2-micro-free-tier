@@ -1,6 +1,6 @@
 provider "google" {
-  credentials = local.credentials
-  project     = var.project_id
+  credentials = local.credentials_file
+  project     = local.project_id
   region      = var.region
 }
 
