@@ -48,10 +48,10 @@ variable "zone" {
 variable "web_instance_count" {
   type        = number
   default     = 1
-  description = "Number of web instances to deploy. This application requires just one instance."
+  description = "Number of web instances to deploy. This module requires just one instance by default (Free tier)."
 
   validation {
     condition     = var.web_instance_count == 1
-    error_message = "This module requires just one instance (GCP Free tier). If you want do deploy more instances, see variables.tf file and delete web_instance_count block"
+    error_message = "This module requires just one instance by default (Free tier). If you want to deploy more instances, see variables.tf and exclude validation block on web_instance_count variable block, after that, set the variable value with the quantity that you want"
   }
 }
