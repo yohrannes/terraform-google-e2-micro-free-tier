@@ -12,22 +12,20 @@ locals {
   startup_script_path = templatefile("${var.startup_script_path}", {})
 }
 
-variable "startup_script_path" {
-  type = string
-  description = "Startup script file path (Ex. <ROOT_MODULE_PATH>/startup-script.sh)"
-  default = "startup-script.sh"
-}
-
 variable "credentials_path" {
   type = string
   description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
-  default = "~/.gcp/credentials.json"
 }
 
 variable "ssh_key_path" {
   type = string
-  description = "Desired ssh_key path"
-  default = "~/.ssh/id_rsa.pub"
+  description = "Desired ssh_key path (Ex. ~/.ssh/id_rsa.pub)"
+}
+
+variable "startup_script_path" {
+  type = string
+  description = "Startup script file path (Ex. <ROOT_MODULE_PATH>/startup-script.sh)"
+  default = "./startup-script.sh"
 }
 
 variable "instance_user" {
@@ -50,7 +48,7 @@ variable "ip_cidr_range" {
 
 variable "region" {
   type        = string
-  description = "Region name"
+  description = "Region name (Free tier allowed in us-west1, us-central and us-east1)"
   default     = "us-east1"
     validation {
     condition     = (var.region == "us-east1") || (var.region == "us-west1") || (var.region == "us-central1")
