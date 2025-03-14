@@ -1,17 +1,31 @@
-# Devops na Google Cloud
- 
-  Este projeto consiste em realizar provisionamento de um servidor Ubuntu 22.04 LTS e hospedá-lo no na Google Cloud, juntamente com na criação de uma VPN e um bucket para armazenar o estado da infraestrutura; Utilizando CI-CD do gitlab para a pipeline e infra-as-code com o terraform, com diversas ferramentas e configurações na melhor prática possível segundo as recomendações da GCP com segurança, provisionadas totalmente por código.
+# Run google ec2-micro instance (free tier).
 
-## Tecnologias utilizadas
+This repository consists in simplify the process to provide a ec2-micro instance from terraform modules, to be initially used for free tier level.
 
-Ferramentas | Linguagens | Frameworks | Docker images
-:---:|:---:|:---:|:---:
-Docker|Shell script|Flask|ubuntu:22.04
-Terraform|Python|-|alpine
-Nginx|HCL|-|docker:27.1.2
-GCP CLI|JSON|-|docker:27.1.2-dind
+## Usefull for.
+- Low-traffic web servers
+- Back office apps
+- Containerized microservices
+- Small databases
+- Virtual desktops
+- Development and test environments
 
-## Instruções de instalação e provisionamento.
+## Basic instance specifications.
+
+### Capacity.
+- vCPU: 2
+- Memory: 1GB
+
+### Firewall.
+- Allowed ICMP port
+- Allowed TCP port (80, 443, 22)
+
+## How to provide.
+
+Required tools |
+:---:|
+Terraform|
+GCP CLI|
 
 ### 1 - Instalação do terraform no ubuntu.
 
@@ -153,59 +167,3 @@ gcloud compute instances list
 curl http://<ip-publico-da-vps>
 ```
   Demais passos para a configuração , teste e provisionamento serão feitos a partir da pipeline do gitlab.
-
-## Diagrama da infraestrutua.
-
-![diagrama-infra](./static/images/diagrama-infra.png)
-
-## Fluxograma da pipeline.
-
-![fluxgrama-pipeline](./static/images/fluxograma-pipeline.png)
-
-## Descritivo da Pipeline.
-
-### Test
-
-  Este estágio é composto dois jobs, o primeiro (install-nginx-test) é onde verificamos a instalação do nginx em uma imagem docker que seja do mesmo sistema operacional (ubuntu),versão (22.04) e arquitetura do processador da VPS na GCP, que será provisionada (amd64 que já é a utilizada no executor do gitlab). Nesta imagem será executado o mesmo script de inicialização que é especificado na criação da VPS, com uma diferença na execução (install-nginx) pois realizaremos o teste somente da function install-nginx do script que será utilizada na VPS da GCP. Esta function consiste resumidamente na instalação do nginx e configuração do mesmo como proxy para redirecionar a porta 80 da VPS para a 5000 onde se encontrará rodando o container da aplicação. Caso dê tudo certo ou não, será informado.
-
-  O segundo job neste estágio de test é o check-image-security, onde basicamente é feita a instalação da ferramenta trivy em uma imagem que simulará a VPS ubuntu na GCP, ferramenta amplamente utilizada para verificar vulnerabilidades em imagens dockers, onde verificará e informará o estado de segurança da imagem da aplicação na pipeline e salvará em um arquivo de texto(trivy image yohrannes/coodesh-challenge > trivy-scan.txt), caso encontre uma vulnerabilidade do tipo HIGH será informado.
-
-### Build
-
-  Neste estágio temos somente um job onde será provisionado uma imagem do docker (docker:27.1.2), utilizando o serviço do docker dind, que nos ajudará a verificar o build da imagem da aplicação, caso tudo ocorra bem no estágio anterior e no build da imagem, deverá realizar o pull, enviando a imagem da forma correta para o registry do docker (dockerhub).
-
-### Deploy
-
-  Este é o ultimo estágio onde será realizado o deploy de toda a infraestrutura e instalação da VPS, caso tudo ocorra bem.
-
-  Primeiramente para executarmos este job utilizaremos a imagem do docker, com o serviço do docker dind para realizarmos o build da imagem oficial da hashicorp(terraform) que utilizaremos para executar os comandos necessários para provisionar a infraestrutura. Após isso criamos um diretório para fazer a autenticação da nossa service account com o provider da google, utilizando a chave key.json para fazer a autenticação.
-
-  Adiante seguimos com o comando terraform init e depois com o terraform apply, onde provisionamos a infraestrutura por completo, após toda a infraestrutura ser provisionada adicionamos ao arquivo main.tf do terraform a informação de que ele precisará armazenar o estado da infraestrutura dentro do bucket já criado (coodesh-bucket) sendo assim, temos o nosso backup caso ocorra algum problema em qualquer estado do provisionamento da infraestrutura, ou perca de arquivos, sabemos que o estado de toda a infra está dentro do bucket protegido. Caso dê tudo certo ou não, será informado.
-
-### Observações
-
-  As variáveis de ambiente mais sigilosas são passadas diretamente na conta do gitlab sendo protegidas e mascaradas.
-
-  Por questões de tempo ainda não foi provisionado uma forma para o provisionamente de uma infra de monitoramento, porém a intenção era dentro da VPS, além de rodar a imagem da aplicação, instalar o node exporter e o prometheus na VPS, e o node exporter na imagem da a plicação, mandando assim métricas de estado de cpu, ram e disco para algum monitorador externo de preferência (outra VPS) para monitorar toda a infra.
-
-## Passos na executados no desafio.
-
-### 1 - Configuração do Servidor
-
-1. Configuração de IAM com segurança na GCP*
-2. Configuração da redes para o Servidor*
-3. Configuração do servidor na GCP (mais barato possivel) com Ubuntu LTS.*
-4. Instalação de configuração de softwares recomendados sob as perspectivas de segurança(docker,nginx-proxy), desempenho(alpine), backup e monitorização.*
-5. Configuração do nginx para servir uma página web HTML estática.*
-
-### 2 - Infra as Code
-
-1. Utilizando o Terraform*
-
-Projeto executando em um servidor e com as melhores práticas de segurança com grupos de segurança(service-account) e as configurações de rede criando completamente por código.*
-
-### 3 - Continuous Delivery
-
-Pipeline de apoio para a entrega contínua da aplicação de monitorização construída na Parte 2 no servidor configurado na Parte 1.*
-
-Descrever a pipeline utilizando um diagrama de fluxo e explicar o objetivo e o processo de seleção usado em cada uma das ferramentas e técnicas específicas que compõem a sua pipeline. *

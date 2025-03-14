@@ -52,6 +52,6 @@ variable "web_instance_count" {
 
   validation {
     condition     = var.web_instance_count == 1
-    error_message = "This application requires just one instance (GCP Free tier). If you want do deploy more instances, see variables.tf file and delete web_instance_count block"
+    error_message = "This module requires just one instance (GCP Free tier). If you want do deploy more instances, see variables.tf file and delete web_instance_count block"
   }
 }
