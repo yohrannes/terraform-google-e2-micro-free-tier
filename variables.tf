@@ -1,19 +1,30 @@
 locals {
-  ssh_public_key      = file("/root/.ssh/id_rsa.pub")
-  credentials         = file("~/.gcp/credentials.json")
+  ssh_public_key      = file(var.ssh_key_path)
+  credentials         = file(var.credentials_path)
   formatted_key       = "${var.instance_user}:${trimspace(local.ssh_public_key)}"
   startup_script_path = templatefile("${path.module}/startup-files/startup-script.sh", {})
-}
-
-variable "instance_user" {
-  type        = string
-  description = "Base Installation User"
-  default     = "ubuntu"
 }
 
 variable "project_name" {
   type        = string
   description = "Project name"
+}
+
+variable "credentials_path" {
+  type = string
+  description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
+}
+
+variable "ssh_key_path" {
+  type = string
+  description = "Desired ssh_key path"
+  default = "~/.ssh/id_rsa.pub"
+}
+
+variable "instance_user" {
+  type        = string
+  description = "System based installation user"
+  default     = "ubuntu"
 }
 
 variable "instance_name" {
@@ -48,10 +59,10 @@ variable "zone" {
 variable "web_instance_count" {
   type        = number
   default     = 1
-  description = "Number of web instances to deploy. This module requires just one instance by default (Free tier)."
+  description = "Number of web instances to deploy, just one instance by default (Free tier)."
 
   validation {
     condition     = var.web_instance_count == 1
-    error_message = "This module requires just one instance by default (Free tier). If you want to deploy more instances, see variables.tf and exclude validation block on web_instance_count variable block, after that, set the variable value with the quantity that you want"
+    error_message = "This module requires just one instance by default (Free tier). If you want to deploy more instances, see variables.tf and exclude validation block in web_instance_count variable block, after that, set the variable value with the quantity that you want"
   }
 }
