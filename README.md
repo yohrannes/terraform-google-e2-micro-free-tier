@@ -28,7 +28,7 @@ Required tools
 
 ### Install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and [Google cloud CLI](https://cloud.google.com/sdk/docs/install-sdk).
 
-### Create a [Service ccount](https://cloud.google.com/iam/docs/understanding-roles#compute-engine-roles) for security (skip if you already had it).
+### Create a [Service account](https://cloud.google.com/iam/docs/understanding-roles#compute-engine-roles) for security (skip if you already had it).
 
 
 ```
