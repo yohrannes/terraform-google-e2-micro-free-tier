@@ -1,31 +1,31 @@
 locals {
-  ssh_public_key      = file(var.ssh_key_path)
+  ssh_public_key = file(var.ssh_key_path)
 
-  credentials_file    = file(var.credentials_path)
-  
+  credentials_file = file(var.credentials_path)
+
   #Get project_id from credentials.json
   credentials_path    = var.credentials_path
   credentials_content = jsondecode(file(local.credentials_path))
-  project_id = local.credentials_content.project_id
-  
+  project_id          = local.credentials_content.project_id
+
   formatted_key       = "${var.instance_user}:${trimspace(local.ssh_public_key)}"
   startup_script_path = templatefile("${var.startup_script_path}", {})
 }
 
 variable "credentials_path" {
-  type = string
+  type        = string
   description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
 }
 
 variable "ssh_key_path" {
-  type = string
+  type        = string
   description = "Desired ssh_key path (Ex. ~/.ssh/id_rsa.pub)"
 }
 
 variable "startup_script_path" {
-  type = string
+  type        = string
   description = "Startup script file path (Ex. <ROOT_MODULE_PATH>/startup-script.sh)"
-  default = "./startup-script.sh"
+  default     = "./startup-script.sh"
 }
 
 variable "instance_user" {
@@ -37,7 +37,7 @@ variable "instance_user" {
 variable "instance_name" {
   type        = string
   description = "Instance name"
-  default     = "instance-free-tier"
+  default     = "tf-web-instance"
 }
 
 variable "ip_cidr_range" {
@@ -50,7 +50,7 @@ variable "region" {
   type        = string
   description = "Region name (Free tier allowed in us-west1, us-central and us-east1)"
   default     = "us-east1"
-    validation {
+  validation {
     condition     = (var.region == "us-east1") || (var.region == "us-west1") || (var.region == "us-central1")
     error_message = "This region are not on google free tier (allowed just in us-west1, us-central and us-east1), if you really need to specify another region see variables.tf and exclude validation block in region variable block, after that, set the variable region value with the region that you want"
   }
