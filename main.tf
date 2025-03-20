@@ -1,78 +1,43 @@
 provider "google" {
-  credentials = local.credentials_file
-  project     = local.project_id
+  credentials = var.credentials_path != "" ? file(var.credentials_path) : null
+  project     = var.project_id
   region      = var.region
 }
 
-resource "google_compute_network" "vpc" {
-  name                    = "vpc"
-  auto_create_subnetworks = false
+resource "google_project_service" "cloudresourcemanager_api" {
+  project            = var.project_id
+  service            = "cloudresourcemanager.googleapis.com"
+  disable_on_destroy = false
 }
 
-resource "google_compute_subnetwork" "subnet" {
-  name          = "subnet"
-  ip_cidr_range = var.ip_cidr_range
-  network       = google_compute_network.vpc.self_link
+resource "google_project_service" "compute_engine_api" {
+  project            = var.project_id
+  service            = "compute.googleapis.com"
+  disable_on_destroy = false
 }
 
-resource "google_compute_firewall" "frule-allow-http-https-ssh-icmp" {
-  name    = "frule-allow-http-https-ssh-icmp"
-  network = google_compute_network.vpc.self_link
-
-  allow {
-    protocol = "icmp"
-  }
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "443", "22"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
+resource "local_file" "service_account_credentials" {
+  content         = base64decode(google_service_account_key.tf-web-port-sa-key[0].private_key)
+  filename        = pathexpand("~/.gcp/tf-sa-key.json")
+  file_permission = "0664"
 }
 
 resource "google_compute_instance" "instance" {
-  zone  = var.zone
-  name  = var.instance_name
-  count = var.web_instance_count
-
-  boot_disk {
-    auto_delete = true
-    device_name = "instance-boot-disk"
-
-    initialize_params {
-      image = "projects/ubuntu-os-cloud/global/images/ubuntu-2404-noble-amd64-v20241219"
-      size  = 30
-      type  = "pd-standard"
-    }
-
-    mode = "READ_WRITE"
-  }
-
-  can_ip_forward      = false
-  deletion_protection = false
-  enable_display      = false
+  zone                    = var.zone
+  name                    = var.instance_name
+  machine_type            = var.machine_type
+  count                   = var.web_instance_count
+  metadata_startup_script = local.startup_script_path
+  can_ip_forward          = false
+  deletion_protection     = false
+  enable_display          = false
 
   labels = {
     goog-ec-src = "vm-add-from-tf"
   }
 
-  machine_type = "e2-micro"
-
   metadata = {
     ssh-keys = local.formatted_key
-  }
-
-  metadata_startup_script = local.startup_script_path
-
-  network_interface {
-    network    = google_compute_network.vpc.self_link
-    subnetwork = google_compute_subnetwork.subnet.self_link
-    access_config {
-    }
-
-    queue_count = 0
-    stack_type  = "IPV4_ONLY"
   }
 
   scheduling {
@@ -88,5 +53,27 @@ resource "google_compute_instance" "instance" {
     enable_vtpm                 = true
   }
 
-}
+  boot_disk {
+    auto_delete = true
+    device_name = "instance-boot-disk"
+    mode        = "READ_WRITE"
 
+    initialize_params {
+      image = "projects/ubuntu-os-cloud/global/images/ubuntu-2404-noble-amd64-v20241219"
+      size  = 30
+      type  = "pd-standard"
+    }
+
+  }
+
+  network_interface {
+    network    = google_compute_network.vpc.self_link
+    subnetwork = google_compute_subnetwork.subnet.self_link
+    access_config {
+    }
+
+    queue_count = 0
+    stack_type  = "IPV4_ONLY"
+  }
+
+}

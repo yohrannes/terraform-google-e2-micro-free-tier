@@ -33,29 +33,20 @@ gcloud init
 
 # If can't create a project with gcloud init, try...
 gcloud projects create <GLOBAL_UNIQUE_PROJECT_NAME>
+
+# Set project id env
+
+gcloud auth application-default login
+gcloud config set project $GOOGLE_CLOUD_PROJECT
+gcloud services enable cloudresourcemanager.googleapis.com --project=$GOOGLE_CLOUD_PROJECT
+gcloud services enable compute.googleapis.com --project=$GOOGLE_CLOUD_PROJECT
+
+gcloud projects add-iam-policy-binding tf-website-portifolio \
+  --member="user:$(gcloud config get-value account)" \
+  --role="roles/iam.serviceAccountAdmin"
 ```
 
-### Create and give permissions to one [Service account](https://cloud.google.com/iam/docs/understanding-roles#compute-engine-roles) for security (skip if you already have it).
-
-```
-gcloud iam service-accounts create <SERVICE_ACCOUNT_NAME> --display-name "<SERVICE_ACCOUNT_NAME>"
-
-# Copy service account e-mail
-gcloud iam service-accounts list
-
-SERVICE_ACCOUNT_EMAIL="<SERVICE_ACCOUNT_EMAIL>"
-GOOGLE_CLOUD_PROJECT="<GLOBAL_UNIQUE_PROJECT_NAME>"
-
-# Give permissions do this service account to provide instances.
-gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
-  --member "serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
-  --role "roles/compute.admin" \
-  --role "roles/compute.networkAdmin" \
-  --role "roles/compute.securityAdmin" \
-  --role "roles/iam.serviceAccountUser" \
-  --role "roles/viewer"
-
-```
+### Link billing account to the project
 
 ### Provision infrastructure with terraform.
 ```

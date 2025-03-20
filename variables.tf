@@ -1,25 +1,35 @@
 locals {
-  ssh_public_key = file(var.ssh_key_path)
-
-  credentials_file = file(var.credentials_path)
-
-  #Get project_id from credentials.json
-  credentials_path    = var.credentials_path
-  credentials_content = jsondecode(file(local.credentials_path))
-  project_id          = local.credentials_content.project_id
-
+  ssh_public_key      = file(var.ssh_key_path)
   formatted_key       = "${var.instance_user}:${trimspace(local.ssh_public_key)}"
   startup_script_path = templatefile("${var.startup_script_path}", {})
-}
-
-variable "credentials_path" {
-  type        = string
-  description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
 }
 
 variable "ssh_key_path" {
   type        = string
   description = "Desired ssh_key path (Ex. ~/.ssh/id_rsa.pub)"
+}
+
+variable "project_id" {
+  type        = string
+  description = "Project ID"
+}
+
+variable "credentials_path" {
+  type        = string
+  description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
+  default     = ""
+}
+
+variable "create_sa" {
+  description = "Define se os recursos neste arquivo devem ser criados"
+  type        = bool
+  default     = false
+}
+
+variable "service_account_name" {
+  type        = string
+  description = "Service account name"
+  default     = "tfwebportsa"
 }
 
 variable "startup_script_path" {
@@ -38,6 +48,12 @@ variable "instance_name" {
   type        = string
   description = "Instance name"
   default     = "tf-web-instance"
+}
+
+variable "machine_type" {
+  type        = string
+  description = "Machine type"
+  default     = "e2-micro"
 }
 
 variable "ip_cidr_range" {

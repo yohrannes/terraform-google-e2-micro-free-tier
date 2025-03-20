@@ -7,3 +7,7 @@ output "connect_command" {
   description = "Connection command:"
   value       = "ssh ${var.instance_user}@${google_compute_instance.instance[0].network_interface[0].access_config[0].nat_ip} -i ${var.ssh_key_path}"
 }
+
+/* output "service_account_email" {
+  value = var.enable_service_account ? google_service_account.tf-web-port-sa[0].email : "Service Account não criada"
+} */
