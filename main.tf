@@ -16,12 +16,6 @@ resource "google_project_service" "compute_engine_api" {
   disable_on_destroy = false
 }
 
-resource "local_file" "service_account_credentials" {
-  content         = base64decode(google_service_account_key.tf-web-port-sa-key[0].private_key)
-  filename        = pathexpand("~/.gcp/tf-sa-key.json")
-  file_permission = "0664"
-}
-
 resource "google_compute_instance" "instance" {
   zone                    = var.zone
   name                    = var.instance_name

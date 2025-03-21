@@ -20,16 +20,10 @@ variable "credentials_path" {
   default     = ""
 }
 
-variable "create_sa" {
-  description = "Define se os recursos neste arquivo devem ser criados"
+variable "enable_sa_resource" {
+  description = "Create a service account to be used with terraform. Skip this if you already have a service account."
   type        = bool
   default     = false
-}
-
-variable "service_account_name" {
-  type        = string
-  description = "Service account name"
-  default     = "tfwebportsa"
 }
 
 variable "startup_script_path" {

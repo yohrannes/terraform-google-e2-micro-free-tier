@@ -30,27 +30,20 @@ Required tools
 ### Authenticate with your desired Google Account and create a Project (skip if you already have it)..
 ```
 gcloud init
-
+```
+```
 # If can't create a project with gcloud init, try...
 gcloud projects create <GLOBAL_UNIQUE_PROJECT_NAME>
-
-# Set project id env
-
+```
+```
 gcloud auth application-default login
-gcloud config set project $GOOGLE_CLOUD_PROJECT
-gcloud services enable cloudresourcemanager.googleapis.com --project=$GOOGLE_CLOUD_PROJECT
-gcloud services enable compute.googleapis.com --project=$GOOGLE_CLOUD_PROJECT
-
-gcloud projects add-iam-policy-binding tf-website-portifolio \
-  --member="user:$(gcloud config get-value account)" \
-  --role="roles/iam.serviceAccountAdmin"
 ```
 
 ### Link billing account to the project
 
 ### Provision infrastructure with terraform.
 ```
-terraform init -upgrade
-terraform plan -out plan
+terraform init
+terraform plan
 terraform apply
 ```
