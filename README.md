@@ -47,3 +47,11 @@ terraform init
 terraform plan
 terraform apply
 ```
+
+## Contribute 🤝
+
+We welcome contributions to improve this project! Here’s how you can help:
+
+- **Report Issues**: If you encounter any problems, open a [GitHub issue](https://github.com/yohrannes/terraform-google-e2-micro-free-tier/issues).
+- **Submit Enhancements**: Share your improvements by creating a [pull request](https://github.com/yohrannes/terraform-google-e2-micro-free-tier/pulls).
+- **Suggest Features**: Have an idea? Start a discussion in the project’s repository.
