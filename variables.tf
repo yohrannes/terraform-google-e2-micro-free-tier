@@ -20,12 +20,6 @@ variable "credentials_path" {
   default     = ""
 }
 
-variable "enable_sa_resource" {
-  description = "Create a service account to be used with terraform. Skip this if you already have a service account."
-  type        = bool
-  default     = false
-}
-
 variable "startup_script_path" {
   type        = string
   description = "Startup script file path (Ex. <ROOT_MODULE_PATH>/startup-script.sh)"
@@ -72,7 +66,7 @@ variable "zone" {
   default     = "us-east1-b"
 }
 
-variable "web_instance_count" {
+variable "instance_count" {
   type        = number
   default     = 1
   description = "Number of web instances to deploy, just one instance by default (Free tier)."

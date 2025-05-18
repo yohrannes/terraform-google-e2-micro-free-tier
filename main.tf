@@ -20,7 +20,7 @@ resource "google_compute_instance" "instance" {
   zone                    = var.zone
   name                    = var.instance_name
   machine_type            = var.machine_type
-  count                   = var.web_instance_count
+  count                   = var.instance_count
   metadata_startup_script = local.startup_script_path
   can_ip_forward          = false
   deletion_protection     = false
