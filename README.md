@@ -11,8 +11,11 @@ This repository consists in simplify the process to provide a ec2-micro instance
 
 ## Instance specifications.
 
+### S.O
+- Ubuntu 24.04
+
 ### Capacity.
-- vCPU: 2
+- vCPU: 2 (AMD64)
 - Memory: 1GB
 
 ### Firewall.
@@ -52,6 +55,7 @@ terraform apply
 
 We welcome contributions to improve this project! Here’s how you can help:
 
+- **Repository**: [Here](https://github.com/yohrannes/terraform-google-e2-micro-free-tier/issues).
 - **Report Issues**: If you encounter any problems, open a [GitHub issue](https://github.com/yohrannes/terraform-google-e2-micro-free-tier/issues).
 - **Submit Enhancements**: Share your improvements by creating a [pull request](https://github.com/yohrannes/terraform-google-e2-micro-free-tier/pulls).
 - **Suggest Features**: Have an idea? Start a discussion in the project’s repository.
