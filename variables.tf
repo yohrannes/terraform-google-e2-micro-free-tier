@@ -20,6 +20,12 @@ variable "credentials_path" {
   default     = ""
 }
 
+variable "enable_sa_resource" {
+  description = "Enable service account resource"
+  type        = bool
+  default     = false
+}
+
 variable "startup_script_path" {
   type        = string
   description = "Startup script file path (Ex. <ROOT_MODULE_PATH>/startup-script.sh)"
