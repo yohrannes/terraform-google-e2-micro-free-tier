@@ -78,7 +78,7 @@ variable "instance_count" {
   description = "Number of web instances to deploy, just one instance by default (Free tier)."
 
   validation {
-    condition     = var.web_instance_count == 1
+    condition     = var.instance_count == 1
     error_message = "This module requires just one instance by default (Free tier). If you want to deploy more instances, see variables.tf and exclude validation block in web_instance_count variable block, after that, set the variable value with the quantity that you want"
   }
 }
