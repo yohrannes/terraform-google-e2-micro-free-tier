@@ -1,9 +1,3 @@
-provider "google" {
-  credentials = var.credentials_path != "" ? file(var.credentials_path) : null
-  project     = var.project_id
-  region      = var.region
-}
-
 resource "google_project_service" "cloudresourcemanager_api" {
   project            = var.project_id
   service            = "cloudresourcemanager.googleapis.com"
