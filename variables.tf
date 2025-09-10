@@ -1,12 +1,12 @@
 locals {
-  ssh_public_key      = file(var.ssh_key_path)
+  ssh_public_key      = var.ssh_key
   formatted_key       = "${var.instance_user}:${trimspace(local.ssh_public_key)}"
   startup_script_path = templatefile("${var.startup_script_path}", {})
 }
 
-variable "ssh_key_path" {
+variable "ssh_key" {
   type        = string
-  description = "Desired ssh_key path (Ex. ~/.ssh/id_rsa.pub)"
+  description = "Desired ssh_key public key to access the instance (Ex. ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAr..."
 }
 
 variable "project_id" {
@@ -17,7 +17,7 @@ variable "project_id" {
 variable "credentials_path" {
   type        = string
   description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
-  default     = ""
+  default     = "~/.config/gcloud/application_default_credentials.json"
 }
 
 variable "enable_sa_resource" {
