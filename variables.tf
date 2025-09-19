@@ -4,7 +4,7 @@ locals {
   startup_script_path = templatefile("${var.startup_script_path}", {})
 }
 
-variable "ssh_key" {
+variable "ssh_key_path" {
   type        = string
   description = "Desired ssh_key path (Ex. ~/.ssh/id_rsa.pub)"
 }
