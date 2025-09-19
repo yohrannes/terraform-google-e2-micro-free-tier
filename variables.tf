@@ -1,5 +1,5 @@
 locals {
-  ssh_public_key      = file(var.ssh_key_path)
+  ssh_public_key      = var.ssh_key_path
   formatted_key       = "${var.instance_user}:${trimspace(local.ssh_public_key)}"
   startup_script_path = templatefile("${var.startup_script_path}", {})
 }
