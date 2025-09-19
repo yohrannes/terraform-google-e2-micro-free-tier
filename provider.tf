@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "google" {
-  credentials = var.credentials_path != "" ? file(var.credentials_path) : null
+  credentials = var.credentials_path
   project     = var.project_id
   region      = var.region
 }

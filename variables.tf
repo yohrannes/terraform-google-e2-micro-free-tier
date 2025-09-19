@@ -17,7 +17,7 @@ variable "project_id" {
 variable "credentials_path" {
   type        = string
   description = "Provider credentials path (Ex. ~/.gcp/credentials.json)"
-  default     = ""
+  default     = null
 }
 
 variable "enable_sa_resource" {
